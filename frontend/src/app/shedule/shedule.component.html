@@ -1,0 +1,214 @@
+<div class="container-fluid py-4 schedule-container">
+  <div class="schedule-header mb-4">
+    <h2 class="mb-3">Planning</h2>
+    
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="date-navigation">
+        <button class="btn btn-outline-secondary" (click)="goToPrevious()">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="btn btn-outline-secondary ms-2" (click)="goToNext()">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+        <span class="date-display ms-3">{{ getFormattedDate() }}</span>
+      </div>
+      
+      <div class="d-flex">
+        <button class="btn btn-outline-primary me-2" (click)="goToToday()">
+          Aujourd'hui
+        </button>
+        <div class="btn-group">
+          <button class="btn" [class.btn-primary]="viewMode === 'week'" [class.btn-outline-primary]="viewMode !== 'week'" (click)="switchView('week')">
+            Semaine
+          </button>
+          <button class="btn" [class.btn-primary]="viewMode === 'month'" [class.btn-outline-primary]="viewMode !== 'month'" (click)="switchView('month')">
+            Mois
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue par semaine -->
+  <div class="table-responsive" *ngIf="viewMode === 'week'">
+    <table class="table table-bordered schedule-table">
+      <thead class="thead-light">
+        <tr>
+          <th rowspan="2" style="width: 120px; vertical-align: middle;">Heure</th>
+          <ng-container *ngFor="let employee of employees">
+            <th [attr.colspan]="getEmployeeDays(employee).length" style="text-align: center;">
+              <div class="employee-header">
+                <strong>{{ employee.name }}</strong><br>
+                <small>{{ employee.role }}</small>
+              </div>
+            </th>
+          </ng-container>
+        </tr>
+        <tr>
+          <ng-container *ngFor="let employee of employees">
+            <th *ngFor="let day of getEmployeeDays(employee)" class="day-header">
+              {{ day }} <span class="day-number">{{ dayNumbers[day] }}</span>
+            </th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let hour of hours">
+          <td class="align-middle time-cell">{{ hour }}</td>
+          <ng-container *ngFor="let employee of employees">
+            <ng-container *ngFor="let day of getEmployeeDays(employee)">
+              <td class="schedule-cell"
+                  (click)="onCellClick(employee, day, hour)"
+                  (dragover)="onDragOver(employee, day, hour, $event)"
+                  (drop)="onDrop(employee, day, hour, $event)"
+                  [attr.data-employee-id]="employee.id"
+                  [attr.data-day]="day"
+                  [attr.data-hour]="hour">
+                <div
+                  *ngIf="getEvent(employee, day, hour)"
+                  class="event"
+                  [ngStyle]="getEventStyle(employee, day, hour)"
+                  (mousedown)="startDrag(employee, day, hour, $event)"
+                  (click)="showEventDetails(getEvent(employee, day, hour), employee); $event.stopPropagation();"
+                  [attr.data-day]="day"
+                  [attr.data-hour]="hour"
+                >
+                  <span class="event-title">{{ getEvent(employee, day, hour)?.title }}</span>
+                </div>
+              </td>
+            </ng-container>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vue par mois -->
+  <div class="table-responsive" *ngIf="viewMode === 'month'">
+    <table class="table table-bordered month-schedule-table">
+      <thead class="thead-light">
+        <tr>
+          <ng-container *ngFor="let employee of employees">
+            <th [attr.colspan]="7" style="text-align: center;">
+              <div class="employee-header">
+                <strong>{{ employee.name }}</strong><br>
+                <small>{{ employee.role }}</small>
+              </div>
+            </th>
+          </ng-container>
+        </tr>
+        <tr>
+          <ng-container *ngFor="let employee of employees">
+            <th *ngFor="let day of ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']" class="day-header">
+              {{ day }}
+            </th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Générer 6 semaines au maximum (42 jours) -->
+        <ng-container *ngFor="let week of [0, 1, 2, 3, 4, 5]">
+          <tr *ngIf="week * 7 < calendarDays.length">
+            <ng-container *ngFor="let employee of employees">
+              <ng-container *ngFor="let i of [0, 1, 2, 3, 4, 5, 6]">
+                <td *ngIf="week * 7 + i < calendarDays.length" 
+                    class="month-cell"
+                    (click)="onMonthCellClick(employee, calendarDays[week * 7 + i].day)"
+                    [attr.data-employee-id]="employee.id"
+                    [attr.data-day]="calendarDays[week * 7 + i].day !== 0 ? days[calendarDays[week * 7 + i].dayOfWeek] : ''"
+                    [attr.data-hour]="'08:00'">
+                  <div class="date-number" *ngIf="calendarDays[week * 7 + i].day !== 0">
+                    {{ calendarDays[week * 7 + i].day }}
+                  </div>
+                  <div class="month-events-container">
+                    <div *ngFor="let event of getMonthDayEvents(employee, calendarDays[week * 7 + i].day)" 
+                         class="month-event"
+                         [ngStyle]="getMonthEventStyle()"
+                         (click)="showEventDetails(event, employee); $event.stopPropagation();"
+                         [attr.data-day]="event.day"
+                         [attr.data-hour]="event.hour"
+                         (mousedown)="startDrag(employee, event.day, event.hour, $event)">
+                      {{ event.title }}
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+            </ng-container>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal pour ajouter un événement -->
+<div *ngIf="modalVisible" class="modal-overlay">
+  <div class="modal-form">
+    <h4>Ajouter un événement</h4>
+    <input type="text" [(ngModel)]="modalInput" placeholder="Titre de l'événement" class="form-control mb-3" autofocus />
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-secondary me-2" (click)="closeModal()">Annuler</button>
+      <button class="btn btn-primary" (click)="submitModal()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour afficher les détails d'un événement -->
+<div *ngIf="eventDetailsVisible" class="modal-overlay">
+  <div class="modal-form event-details-modal">
+    <div class="event-details-header" [style.backgroundColor]="'#ff7e67'">
+      <h3 class="event-title mb-0">{{ selectedEvent?.title }}</h3>
+      <button class="close-btn" (click)="closeEventDetails()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+    
+    <div class="event-details-content">
+      <!-- Mode visualisation -->
+      <div *ngIf="!editMode">
+        <div class="detail-item">
+          <i class="bi bi-calendar-event"></i>
+          <span>{{ getFormattedEventDate(selectedEvent?.day) }}</span>
+        </div>
+        <div class="detail-item">
+          <i class="bi bi-clock"></i>
+          <span>{{ selectedEvent?.hour }}</span>
+        </div>
+        <div class="detail-item">
+          <i class="bi bi-person"></i>
+          <span>{{ selectedEmployee?.name }} ({{ selectedEmployee?.role }})</span>
+        </div>
+        
+        <div class="actions mt-4 d-flex justify-content-end">
+          <button class="btn btn-outline-danger me-2" (click)="deleteEvent()">Supprimer</button>
+          <button class="btn btn-primary" (click)="toggleEditMode()">Modifier</button>
+        </div>
+      </div>
+      
+      <!-- Mode édition -->
+      <div *ngIf="editMode">
+        <div class="mb-3">
+          <label class="form-label">Titre</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedEvent.title">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Jour</label>
+          <select class="form-select" [(ngModel)]="selectedEvent.day">
+            <option *ngFor="let day of getEmployeeDays(selectedEmployee)" [value]="day">{{ day }}</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Heure</label>
+          <select class="form-select" [(ngModel)]="selectedEvent.hour">
+            <option *ngFor="let hour of hours" [value]="hour">{{ hour }}</option>
+          </select>
+        </div>
+        
+        <div class="actions mt-4 d-flex justify-content-end">
+          <button class="btn btn-secondary me-2" (click)="toggleEditMode()">Annuler</button>
+          <button class="btn btn-primary" (click)="updateEvent()">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,263 @@
+.schedule-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.schedule-header {
+  margin-bottom: 20px;
+}
+
+.date-display {
+  font-size: 1.2em;
+  font-weight: 500;
+  color: #333;
+}
+
+.btn-group .btn {
+  min-width: 90px;
+}
+
+/* Styles communs aux tables */
+.schedule-table, .month-schedule-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+}
+
+.schedule-table th, .schedule-table td,
+.month-schedule-table th, .month-schedule-table td {
+  text-align: center;
+  vertical-align: middle;
+  min-width: 90px;
+  padding: 4px;
+}
+
+/* Styles spécifiques à la vue hebdomadaire */
+.schedule-table td {
+  height: 60px;
+}
+
+.time-cell {
+  font-weight: 500;
+  color: #495057;
+  background-color: #f8f9fa;
+}
+
+.employee-header {
+  padding: 8px 4px;
+  font-weight: 600;
+}
+
+.day-header {
+  font-size: 0.9em;
+  background: #f1f3f5;
+}
+
+.day-number {
+  display: block;
+  font-size: 1.2em;
+  font-weight: 500;
+  color: #495057;
+  margin-top: 2px;
+}
+
+.schedule-cell {
+  position: relative;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #dee2e6;
+  height: 60px;
+}
+
+.schedule-cell:hover {
+  background: #e9ecef;
+}
+
+.cell-highlight {
+  background-color: #e6f7ff !important;
+  border: 2px dashed #007bff !important;
+}
+
+/* Styles spécifiques à la vue mensuelle */
+.month-cell {
+  position: relative;
+  min-height: 120px;
+  height: 120px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #dee2e6;
+  padding: 4px;
+  vertical-align: top;
+}
+
+.month-cell:hover {
+  background: #e9ecef;
+}
+
+.date-number {
+  font-weight: 500;
+  font-size: 1.1em;
+  margin-bottom: 5px;
+  text-align: right;
+  color: #495057;
+}
+
+.month-events-container {
+  height: calc(100% - 24px);
+  overflow-y: auto;
+}
+
+.month-event {
+  font-size: 0.8em;
+  padding: 2px 4px;
+  margin-bottom: 2px;
+  border-radius: 3px;
+  background: #007bff;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Styles pour les événements */
+.event {
+  position: relative;
+  z-index: 2;
+  margin: 2px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: all 0.2s;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.event:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.event-title {
+  font-size: 0.95em;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Modal commun */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-form {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-width: 320px;
+  max-width: 90vw;
+  animation: modalFadeIn 0.3s ease-out;
+  overflow: hidden;
+}
+
+/* Modal pour ajouter un événement */
+.modal-form:not(.event-details-modal) {
+  padding: 32px 28px 24px 28px;
+  text-align: center;
+}
+
+.modal-form h4 {
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+.modal-form input.form-control {
+  font-size: 1.1em;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  margin-bottom: 12px;
+}
+
+.modal-form button {
+  min-width: 90px;
+}
+
+/* Modal de détails d'événement */
+.event-details-modal {
+  width: 400px;
+  max-width: 100%;
+  padding: 0;
+  text-align: left;
+}
+
+.event-details-header {
+  position: relative;
+  background-color: #ff7e67;
+  color: white;
+  padding: 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.event-details-header h3 {
+  font-weight: 600;
+  margin-right: 30px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.event-details-content {
+  padding: 20px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.detail-item i {
+  font-size: 1.2em;
+  margin-right: 12px;
+  width: 20px;
+  text-align: center;
+  color: #555;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
