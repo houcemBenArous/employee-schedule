@@ -9,7 +9,10 @@
       "events": [
         {"day": "Mardi", "hour": "08:00", "title": "Angiographie coronaire"},
         {"day": "Vendredi", "hour": "10:00", "title": "Test d'effort cardiaque"},
-        {"day": "Lundi", "hour": "11:00", "title": "Examen cardiaque"}
+        {"day": "Lundi", "hour": "11:00", "title": "Examen cardiaque"},
+        {"day": "Jeudi", "hour": "14:00", "title": "Consultation cardiologique"},
+        {"day": "Lundi", "hour": "16:00", "title": "Consultation post-opératoire"},
+        {"day": "Vendredi", "hour": "08:00", "title": "Examen échocardiographie"}
       ]
     },
     {
@@ -19,7 +22,11 @@
       "workDays": ["Lundi", "Mercredi", "Vendredi"],
       "workHours": ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
       "events": [
-        {"day": "Mercredi", "hour": "11:00", "title": "Consultation neuromusculaire"}
+        {"day": "Mercredi", "hour": "11:00", "title": "Consultation neuromusculaire"},
+        {"day": "Lundi", "hour": "09:00", "title": "Électroencéphalogramme"},
+        {"day": "Vendredi", "hour": "14:00", "title": "Consultation migraines"},
+        {"day": "Mercredi", "hour": "08:00", "title": "Examen neurologique approfondi"},
+        {"day": "Lundi", "hour": "15:00", "title": "Suivi patient épilepsie"}
       ]
     },
     {
@@ -28,7 +35,40 @@
       "role": "Chirurgien Orthopédique",
       "workDays": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
       "workHours": ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
-      "events": []
+      "events": [
+        {"day": "Mardi", "hour": "10:00", "title": "Consultation fracture"},
+        {"day": "Jeudi", "hour": "09:00", "title": "Chirurgie du genou"},
+        {"day": "Lundi", "hour": "14:00", "title": "Consultation arthrose"},
+        {"day": "Mercredi", "hour": "11:00", "title": "Infiltration articulaire"},
+        {"day": "Vendredi", "hour": "15:00", "title": "Suivi postopératoire hanche"},
+        {"day": "Jeudi", "hour": "16:00", "title": "Consultation scoliose"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Sophie Durand",
+      "role": "Dermatologue",
+      "workDays": ["Mardi", "Mercredi", "Jeudi"],
+      "workHours": ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+      "events": [
+        {"day": "Mardi", "hour": "09:00", "title": "Examen des grains de beauté"},
+        {"day": "Jeudi", "hour": "11:00", "title": "Traitement acné"},
+        {"day": "Mercredi", "hour": "15:00", "title": "Consultation psoriasis"},
+        {"day": "Mardi", "hour": "16:00", "title": "Cryothérapie verrues"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Marc Petit",
+      "role": "Gastro-entérologue",
+      "workDays": ["Lundi", "Mercredi", "Vendredi"],
+      "workHours": ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+      "events": [
+        {"day": "Lundi", "hour": "10:00", "title": "Endoscopie digestive"},
+        {"day": "Mercredi", "hour": "09:00", "title": "Consultation MICI"},
+        {"day": "Vendredi", "hour": "14:00", "title": "Coloscopie"},
+        {"day": "Lundi", "hour": "16:00", "title": "Consultation reflux gastrique"}
+      ]
     }
   ]
 }

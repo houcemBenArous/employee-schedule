@@ -17,6 +17,56 @@
         <button class="btn btn-outline-primary me-2" (click)="goToToday()">
           Aujourd'hui
         </button>
+        
+        <!-- Filtres de calendrier -->
+        <div class="btn-group me-2 position-relative">
+          <button class="btn btn-outline-primary" (click)="toggleWeekCalendar()" *ngIf="viewMode === 'week'">
+            <i class="bi bi-calendar-week"></i> Filtrer semaine
+          </button>
+          <button class="btn btn-outline-primary" (click)="toggleMonthCalendar()" *ngIf="viewMode === 'month'">
+            <i class="bi bi-calendar-month"></i> Filtrer mois
+          </button>
+          
+          <!-- Calendrier semaine -->
+          <div *ngIf="weekCalendarVisible" class="calendar-dropdown week-calendar">
+            <div class="calendar-header">
+              <h6>{{ months[selectedMonth] }} {{ selectedYear }}</h6>
+            </div>
+            <div class="week-days-header">
+              <div *ngFor="let day of ['L', 'M', 'M', 'J', 'V']">{{ day }}</div>
+            </div>
+            <div class="week-calendar-grid">
+              <ng-container *ngFor="let week of [0, 1, 2, 3, 4, 5]">
+                <ng-container *ngFor="let day of calendarDays.slice(week * 7, week * 7 + 7); let i = index">
+                  <div 
+                    *ngIf="i < 5 && day.day !== 0" 
+                    class="calendar-day"
+                    [class.active]="day.day === selectedWeekDay && day.date && day.date.getMonth() === selectedMonth"
+                    (click)="selectWeekDay(day.day)">
+                    {{ day.day }}
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+          
+          <!-- Calendrier mois -->
+          <div *ngIf="monthCalendarVisible" class="calendar-dropdown month-calendar">
+            <div class="calendar-header">
+              <h6>{{ selectedYear }}</h6>
+            </div>
+            <div class="month-calendar-grid">
+              <div 
+                *ngFor="let month of months; let i = index" 
+                class="month-item"
+                [class.active]="i === selectedMonth"
+                (click)="selectMonth(i)">
+                {{ month.substring(0, 3) }}
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <div class="btn-group">
           <button class="btn" [class.btn-primary]="viewMode === 'week'" [class.btn-outline-primary]="viewMode !== 'week'" (click)="switchView('week')">
             Semaine

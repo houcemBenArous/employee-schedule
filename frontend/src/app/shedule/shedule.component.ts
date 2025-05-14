@@ -24,6 +24,14 @@ export class SheduleComponent implements OnInit {
   draggingEvent: any = null;
   dragOrigin: { employeeIndex: number, day: string, hour: string } | null = null;
   
+  // Pour les filtres semaine et mois
+  weekCalendarVisible: boolean = false;
+  monthCalendarVisible: boolean = false;
+  selectedWeekDay: number = new Date().getDate();
+  selectedMonth: number = new Date().getMonth();
+  selectedYear: number = new Date().getFullYear();
+  weekRange: { start: Date, end: Date } | null = null;
+  
   // Pour la création et modification d'événements
   modalVisible: boolean = false;
   modalInput: string = '';
@@ -51,6 +59,7 @@ export class SheduleComponent implements OnInit {
       .then(data => {
         this.employees = data.employees;
         this.generateCalendarData();
+        this.calculateWeekRange(this.currentDate);
       });
   }
 
@@ -63,6 +72,67 @@ export class SheduleComponent implements OnInit {
     
     // Générer les jours du mois pour la vue mensuelle
     this.generateMonthDays();
+  }
+
+  /**
+   * Calcule la plage de jours ouvrables de la semaine (lundi à vendredi)
+   * en fonction de la date sélectionnée
+   */
+  calculateWeekRange(date: Date) {
+    const currentDate = new Date(date);
+    const dayOfWeek = currentDate.getDay(); // 0 = Dimanche, 1 = Lundi, ...
+    
+    // Trouver le lundi de la semaine
+    let startDate = new Date(currentDate);
+    if (dayOfWeek === 0) { // Dimanche
+      startDate.setDate(currentDate.getDate() - 6);
+    } else {
+      startDate.setDate(currentDate.getDate() - (dayOfWeek - 1));
+    }
+    
+    // Trouver le vendredi de la semaine
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 4); // +4 jours pour vendredi
+    
+    this.weekRange = { start: startDate, end: endDate };
+    this.currentDate = new Date(startDate);
+    this.generateCalendarData();
+  }
+
+  /**
+   * Affiche ou masque le calendrier de sélection de semaine
+   */
+  toggleWeekCalendar() {
+    this.weekCalendarVisible = !this.weekCalendarVisible;
+    this.monthCalendarVisible = false;
+  }
+
+  /**
+   * Affiche ou masque le calendrier de sélection de mois
+   */
+  toggleMonthCalendar() {
+    this.monthCalendarVisible = !this.monthCalendarVisible;
+    this.weekCalendarVisible = false;
+  }
+
+  /**
+   * Sélectionne un jour du calendrier pour la vue semaine
+   */
+  selectWeekDay(day: number) {
+    this.selectedWeekDay = day;
+    const newDate = new Date(this.selectedYear, this.selectedMonth, day);
+    this.calculateWeekRange(newDate);
+    this.weekCalendarVisible = false;
+  }
+
+  /**
+   * Sélectionne un mois pour la vue mensuelle
+   */
+  selectMonth(month: number) {
+    this.selectedMonth = month;
+    this.currentDate = new Date(this.selectedYear, month, 1);
+    this.generateCalendarData();
+    this.monthCalendarVisible = false;
   }
 
   /**
